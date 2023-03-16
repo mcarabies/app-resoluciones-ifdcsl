@@ -44,3 +44,4 @@ engine = create_engine("sqlite:///C:\\Users\\mcara\\Desktop\\resoluciones_app\\r
 connection = engine.connect()
 metadata.drop_all(engine)
 metadata.create_all(engine)
+connection.close()
