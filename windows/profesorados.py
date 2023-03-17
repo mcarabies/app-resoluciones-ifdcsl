@@ -14,14 +14,17 @@ class Profesorados(UserControl):
     def __init__(self):
         super().__init__()
         # VARIABLES DE DATOS
+        self.id_profesorado = None
         self.tabla = DataTable(
             columns=[
                 DataColumn(Text("ID")),
-                DataColumn(Text("PROFESORADO"))
+                DataColumn(Text("PROFESORADO")),              
             ],
             rows=[
                 
-            ]
+            ],
+            
+
         )
         self.todos_los_profesorados = ListView(
             controls=[
@@ -35,17 +38,51 @@ class Profesorados(UserControl):
         self.agregarBoton = ElevatedButton("Agregar Profesorado",on_click=self.agregarProfesorado, bgcolor="blue", color="white" )
         self.editarBoton = ElevatedButton("Editar Profesorado",on_click=self.editarProfesorado, bgcolor="orange", color="white" )
         self.eliminarBoton = ElevatedButton("Eliminar Profesorado",on_click=self.eliminarProfesorado, bgcolor="red", color="white" )
+        
+        self.agregarBoton.visible = True
+        self.editarBoton.visible = False
+        self.eliminarBoton.visible = False
     
-    def editarProfesorado(self, e):
-        pass
+    def editarProfesorado(self,e):
+        cur.execute("UPDATE profesorados SET (nombre)=(?) WHERE (profesorado_id)=(?)", [self.agregar_profesorado.value, self.id_profesorado])
+        conn.commit()
+        #borrar datos antiguaos y volver a leer
+        self.agregar_profesorado.value = None
+        self.tabla.rows.clear()
+        self.mostrarProfesorados()
+        self.ocultarBotones()
+        self.page.update()
     
-    def eliminarProfesorado(e):
-        pass
+    def eliminarProfesorado(self, e):
+        cur.execute("DELETE FROM profesorados WHERE profesorado_id=?", [self.id_profesorado])
+        conn.commit()
+        #borrar datos antiguaos y volver a leer
+        self.agregar_profesorado.value = None
+        self.tabla.rows.clear()
+        self.mostrarProfesorados()
+        self.ocultarBotones()
+        self.page.update()
     
-    
+    def mostrarBotones(self, e1, e2):
+        self.agregar_profesorado.value = e2
+
+        self.agregarBoton.visible = False
+        self.editarBoton.visible = True
+        self.eliminarBoton.visible = True
+        self.id_profesorado = int(e1)
+        self.profesorado_a_editar = e2
+        self.update()
+        
+    def ocultarBotones(self):
+        self.agregarBoton.visible = True
+        self.editarBoton.visible = False
+        self.eliminarBoton.visible = False
+        self.update()
+        
     def mostrarProfesorados(self):
         cur.execute("SELECT * from profesorados")
         conn.commit()
+
         profesorados_guardados = cur.fetchall()
         for profesorado in profesorados_guardados:
             self.tabla.rows.append(
@@ -53,7 +90,8 @@ class Profesorados(UserControl):
                           cells=[
                               DataCell(Text(profesorado[0])),
                               DataCell(Text(profesorado[1])),
-                          ] 
+                          ], 
+                        on_select_changed=lambda e:self.mostrarBotones(e.control.cells[0].content.value, e.control.cells[1].content.value)
                        ) )
         self.update()
     
