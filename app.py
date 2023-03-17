@@ -6,5 +6,6 @@ def main (page:Page):
     page.update()
     profesorados = Profesorados()
     page.add(profesorados)
+
     
 flet.app(target=main)
