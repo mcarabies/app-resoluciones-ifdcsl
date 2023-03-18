@@ -14,7 +14,7 @@ organismos = Table("organismos",metadata,
 
 instrumentos = Table("instrumentos",metadata,
                     Column("instrumento_id", Integer(), primary_key=True, autoincrement=True),
-                    Column("nombre", String(40))
+                    Column("nombre", String(40), unique=True, nullable=True)
                     )
 
 materias = Table("materias",metadata,

@@ -1,6 +1,6 @@
 import sqlite3
 import os
-from flet import Page, UserControl, Column, TextField, ElevatedButton, DataTable, DataColumn, DataRow, DataCell, Text, ListView, Row
+from flet import Page, UserControl, Column, TextField, ElevatedButton, DataTable, DataColumn, DataRow, DataCell, Text, ListView, Row, colors, AppBar, Container
 
 # CONEXION A LA BASE DE DATOS
 BASE_DIR = os.getcwd()
@@ -112,7 +112,7 @@ class Profesorados(UserControl):
     #ARMA TODO LO DE LA CLASE SIEMPRE DEBE SER build
     def build(self):
         return Column([
-            Text("PROFESORADOS ACTIVOS", size=30),
+            Text("INSTRUMENTOS ADMINISTRATIVOS", size=15, weight=500),
             self.agregar_profesorado,            
             Row([self.agregarBoton, self.editarBoton, self.eliminarBoton]),
             self.todos_los_profesorados
